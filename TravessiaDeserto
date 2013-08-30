@@ -1,0 +1,224 @@
+#include <iostream.h>  // cout, cin
+#include <stdlib.h>    // rand, atof
+#include <stdio.h>     // printf, scanf,
+#include <conio.h>     // getch   printf
+#include <string.h>    // strlen,  strcat
+#include <windows.h>   // COORD
+#include <math.h>       // pow
+#include <locale.h>
+#include <fstream.h>
+#include <iomanip.h>
+
+
+// declaro as funções
+
+int menuPrincipal();
+int mostraVetor();
+int Avancar();
+int Voltar();
+int Ver();
+int Sair();
+int Reabastercer();
+int deixarGas();
+int pegarGas();
+
+
+int caminho [10] = {0};
+int indiceCaminho [10]= {1,2,3,4,5,6,7,8,9,10};
+int caminhao = 6;
+int posicao = 0; 
+
+int prog =0;
+int op, quant = 0;//variaveis globais
+//======================================================================
+int main (void)
+
+{
+ 
+//executa as funções do menu
+  
+  while(prog==0){
+              switch(menuPrincipal())
+              {
+                                     
+              
+             case 6: Avancar(); break;
+              
+             case 4: Voltar(); break;
+             
+             case 2: deixarGas(); break;
+             
+             case 8: pegarGas(); break;
+
+             case 5: Ver();  break;
+             
+             case 9: Sair(); break;              
+             }
+  }
+} 
+
+/*============================================================================*/
+
+
+
+
+//função para posicionamento na tela
+void gotoxy( int x, int y )
+{
+    COORD coord;
+    coord.X = (short)x;
+    coord.Y = (short)y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+//========================= MENU PRINCIPAL =============================//
+
+
+int menuPrincipal()
+{
+ system ("cls");   
+   
+    do { 
+    
+    gotoxy(10,1);   printf("-------- Console do Caminhao --------");
+    gotoxy(10,4);   printf("Digite o Numero Respectivo a acao desejada:");
+    gotoxy(10,6);   printf("6 para Avancar");
+    gotoxy(10,7);   printf("4 para Voltar");
+    gotoxy(10,8);   printf("2 para Deixar Combustivel");
+    gotoxy(10,9);   printf("8 para Pegar Combustivel");
+    gotoxy(10,10);  printf("5 para Ver Status");
+    gotoxy(10,11);  printf("9 para sair");
+    gotoxy(10,12);  printf(">> ");
+    gotoxy(13,12);  scanf("%c", &op);
+    // gotoxy(15,13);printf("%d", posicao); 
+    }while ( (op -48 <1) || ( op - 48 >9)); 
+// Forma de converter caracter em numeros utilizando o marco zero da tabela ASCI
+// que é 48
+    
+    return op-48;
+    
+}
+
+
+
+
+//======================== Função para Avançar o Caminhão =======================================//
+int Avancar()
+
+
+{
+    
+   if (indiceCaminho[posicao] == 10){
+       printf("Parabens voce venceu!!!");
+       getch();
+       Sair();
+       }else{             
+             if (caminhao>0){
+                      caminhao = caminhao - 1;
+                      posicao = posicao + 1;
+                      Ver();
+                      }else {printf("Game Over");getch();Sair();}
+         } 
+        
+}
+
+
+//======================== Função para Fazero o Caminhão Voltar =======================================//
+int Voltar()
+
+
+{
+    
+           
+    if (caminhao>0){
+             
+      if (posicao != 1){
+                
+      caminhao = caminhao - 1;
+      posicao = posicao - 1;
+      Ver();
+      }else {Reabastercer();} 
+      }else {printf("Game Over");getch();Sair();}
+        
+}
+
+//======================== Função para Ver a Situação do Caminhão =======================================//
+
+int Ver()
+
+{   
+    int i=0;
+    printf("Combustivel no caminhao eh:  %d \n",  caminhao);
+    printf("A posicao do caminhao eh:  %d \n",  indiceCaminho[posicao]);
+    printf ("____________________________\n");
+    printf ("| Posicao | Ha Combustivel?|\n");
+    
+   
+    while (i<10){
+        
+        printf ("| %6d |  " , indiceCaminho[i]);
+        printf (" %12d | \n" , caminho[i] );
+        i++;  
+          }
+    printf ("____________________________\n");      
+          
+    
+    getch();   
+} 
+
+
+//======================== Função para Sair do Jogo =======================================//
+// pode ser chamada pelo usuario ou quando o usuario perder o jogo
+int Sair()
+{
+    prog =1;
+    system("cls");
+    printf("Sistema Finalizado\n\n\nDesenvolvido por Mauricio Lima"); 
+    getch();   
+}
+
+//======================== Função para Reabastecer o Caminhão =======================================//
+
+int Reabastercer()
+{
+    caminhao = 6; 
+    posicao = posicao - 1;
+    printf("Caminhao Reabastecido");
+    getch();
+}
+//======================== Função para Deixar combustivel na casa =======================================//
+int deixarGas()
+{
+
+    
+    printf("Quanto deseja deixar de Combustivel? ");
+    scanf("%d", &quant);
+    
+    if (quant <= caminhao){
+              caminhao = caminhao - quant;
+              caminho [posicao] = caminho [posicao] + quant;        
+              }else{printf("Voce deve deixar apenas ha quantia que ha tanque do caminhao");
+              getch();
+              }
+    
+       
+}
+
+//======================== Função para pegar combustivel da casa =======================================//
+   int pegarGas()
+{
+   
+    
+    printf("Quanto deseja pegar de Combustivel? ");
+    scanf("%d", &quant);
+    
+    if (((quant + caminhao)<=6 ) && ( quant <= caminho[posicao])) {
+              caminhao = caminhao + quant;
+              caminho [posicao] = caminho [posicao] - quant;
+              }else{printf("Voce deve pegar apenas uma quantia que caiba no caminhao no maximo 6 ou o que tiver na posicao disponivel");
+              getch();
+              }
+              
+    
+       
+}
